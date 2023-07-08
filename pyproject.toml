@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "tjscl-discord-bot"
+version = "0.1.0"
+description = ""
+authors = ["Krishnan Shankar <krishnans2006@gmail.com>"]
+readme = "README.md"
+packages = [{include = "tjscl_discord_bot"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+py-cord = "^2.4.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+pylint = "^2.17.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
