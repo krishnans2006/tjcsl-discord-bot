@@ -69,7 +69,7 @@ async def check_incidents():
             )
         )
 
-        await channel.send(embed=embed, view=view)
+        await channel.send(content="<@&1127698117370851552>", embed=embed, view=view)
     print("Checked for new incidents")
 
 
