@@ -1,16 +1,20 @@
-# This is a sample Python script.
+import os
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import discord
+
+from api import list_incidents
+
+intents = discord.Intents.default()
+
+client = discord.Client(intents=intents)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
+@client.event
+async def on_ready():
+    await client.change_presence(activity=discord.Game(name="with dns"))
+    print("Bot is ready")
+    list_incidents()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+if __name__ == "__main__":
+    client.run(os.getenv("TOKEN"))
