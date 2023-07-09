@@ -1,9 +1,10 @@
 import os
+from datetime import timedelta
 
 import discord
 from discord.ext import tasks
 
-from api import list_incidents, fetch_incidents
+from api import list_incidents
 
 intents = discord.Intents.default()
 
@@ -19,7 +20,8 @@ async def on_ready():
 
 @tasks.loop(minutes=1)
 async def check_incidents():
-    for new_incident in list_incidents():
+    new_incidents = list_incidents(duration=timedelta(minutes=1))
+    for new_incident in new_incidents:
         print(new_incident)
     print("Checked for new incidents")
 
@@ -30,6 +32,5 @@ async def before_check_incidents():
 
 
 if __name__ == "__main__":
-    fetch_incidents()
     check_incidents.start()
     client.run(os.getenv("TOKEN"))

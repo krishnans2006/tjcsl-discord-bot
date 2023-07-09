@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import os
 from typing import Iterator
 
@@ -5,8 +6,6 @@ import requests
 
 BASE_URL = "https://uptime.betterstack.com/api/v2/"
 Incident = dict[str, str | dict[str, str]]
-
-sent_incidents = []
 
 
 def call_api(endpoint: str, **kwargs) -> dict:
@@ -19,17 +18,12 @@ def call_api(endpoint: str, **kwargs) -> dict:
     return response.json()
 
 
-def fetch_incidents() -> None:
-    global sent_incidents
-    with open("incidents.txt", "r", encoding="utf-8") as f:
-        sent_incidents = f.read().splitlines()
-
-
-def list_incidents() -> Iterator[Incident] | None:
+def list_incidents(duration: timedelta = timedelta(minutes=1)) -> Iterator[Incident] | None:
     current_incidents = call_api("incidents")["data"]
     for incident in current_incidents:
-        if incident["id"] not in sent_incidents:
-            sent_incidents.append(incident["id"])
-            with open("incidents.txt", "a", encoding="utf-8") as f:
-                f.write(incident["id"] + "\n")
+        start_time = datetime.strptime(
+            incident["attributes"]["started_at"], "%Y-%m-%dT%H:%M:%S.%fZ"
+        )
+        if start_time > datetime.now() - duration:
             yield incident
+    yield current_incidents[0]
