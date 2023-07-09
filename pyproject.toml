@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "tjscl_discord_bot"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 py-cord = "^2.4.1"
 requests = "^2.31.0"
 

@@ -1,8 +1,9 @@
 import os
 
 import discord
+from discord.ext import tasks
 
-from api import list_incidents
+from api import list_incidents, fetch_incidents
 
 intents = discord.Intents.default()
 
@@ -16,5 +17,19 @@ async def on_ready():
     list_incidents()
 
 
+@tasks.loop(minutes=1)
+async def check_incidents():
+    for new_incident in list_incidents():
+        print(new_incident)
+    print("Checked for new incidents")
+
+
+@check_incidents.before_loop
+async def before_check_incidents():
+    await client.wait_until_ready()
+
+
 if __name__ == "__main__":
+    fetch_incidents()
+    check_incidents.start()
     client.run(os.getenv("TOKEN"))
