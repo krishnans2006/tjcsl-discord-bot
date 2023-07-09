@@ -3,11 +3,13 @@ from datetime import timedelta
 
 import discord
 from discord.ext import tasks
+from dotenv import load_dotenv
 
 from api import list_incidents
 
-intents = discord.Intents.default()
+load_dotenv()
 
+intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
 guild_id = 1037482630838489179

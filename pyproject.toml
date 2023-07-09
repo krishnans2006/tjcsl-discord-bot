@@ -10,6 +10,7 @@ packages = [{include = "tjscl_discord_bot"}]
 python = "^3.9"
 py-cord = "^2.4.1"
 requests = "^2.31.0"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
