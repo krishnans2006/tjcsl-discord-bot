@@ -33,6 +33,6 @@ def list_incidents(
         )
         if resolve_time > datetime.now() - duration:
             yield incident, start_time, resolve_time, True
-    yield current_incidents[0], datetime.now() - timedelta(hours=6), datetime.now() - timedelta(
-        hours=4
-    ), True
+    # yield current_incidents[0], datetime.now() - timedelta(hours=6), datetime.now() - timedelta(
+    #     hours=4
+    # ), True
