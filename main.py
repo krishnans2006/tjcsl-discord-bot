@@ -26,8 +26,11 @@ async def check_incidents():
     new_incidents = list_incidents(duration=timedelta(minutes=1))
     channel = None
     for incident, timestamp, is_resolved in new_incidents:
+        name = incident["attributes"]["name"]
+        url = incident["attributes"]["url"]
         if not channel:
             channel = client.get_guild(guild_id).get_channel(channel_id)
+
         if is_resolved:
             embed = discord.Embed(
                 title="Resolved Incident",
@@ -40,7 +43,7 @@ async def check_incidents():
                 color=discord.Color.red(),
                 timestamp=timestamp,
             )
-        embed.add_field(name="For", value=incident["attributes"]["name"], inline=True)
+        embed.description = f"{name} - {url}"
         embed.set_author(
             name="Better Stack",
             url="https://uptime.betterstack.com/team/58077/monitors",
