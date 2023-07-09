@@ -27,10 +27,12 @@ def list_incidents(
             incident["attributes"]["started_at"], "%Y-%m-%dT%H:%M:%S.%fZ"
         )
         if start_time > datetime.now() - duration:
-            yield incident, start_time, False
+            yield incident, start_time, None, False
         resolve_time = datetime.strptime(
             incident["attributes"]["resolved_at"], "%Y-%m-%dT%H:%M:%S.%fZ"
         )
         if resolve_time > datetime.now() - duration:
-            yield incident, resolve_time, True
-    yield current_incidents[0], datetime.now(), False
+            yield incident, start_time, resolve_time, True
+    yield current_incidents[0], datetime.now() - timedelta(hours=6), datetime.now() - timedelta(
+        hours=4
+    ), True
