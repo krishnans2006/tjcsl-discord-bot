@@ -1,0 +1,14 @@
+[Unit]
+Description=TJCSL Discord Bot
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/krishnan/tjcsl-discord-bot
+ExecStartPre=/bin/sh -c 'until host discord.com; do sleep 1; done'
+ExecStart=python3.11 -m poetry run python /home/krishnan/tjcsl-discord-bot/main.py
+User=krishnan
+Group=krishnan
+
+[Install]
+WantedBy=multi-user.target
