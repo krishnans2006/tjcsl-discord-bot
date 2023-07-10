@@ -17,6 +17,26 @@ channel_id = 1127402489013076038
 
 base_team_url = "https://uptime.betterstack.com/team/58077"
 
+new_incident_description = """\u200B
+**{name}** - {url}
+
+**Cause:** {cause}
+
+**Start:** <t:{start}:f> (<t:{start}:R>)
+\u200B
+"""
+
+resolved_incident_description = """\u200B
+**{name}** - {url}
+
+**Cause:** {cause}
+
+**Start:** <t:{start}:f> (<t:{start}:R>)
+**End:** <t:{end}:f> (<t:{end}:R>)
+**Duration:** `{duration}`
+\u200B
+"""
+
 
 @client.event
 async def on_ready():
@@ -44,13 +64,17 @@ async def check_incidents():
             duration = timedelta(seconds=end - start)
             embed = discord.Embed(
                 title="Resolved Incident",
-                description=f"​\n**{name}** - {url}\n\n**Cause:** {cause}\n\n**Start:** <t:{start}:f> (<t:{start}:R>)\n**End:** <t:{end}:f> (<t:{end}:R>)\n**Duration:** `{duration}`\n​",
+                description=resolved_incident_description.format(
+                    name=name, url=url, cause=cause, start=start, end=end, duration=duration
+                ),
                 color=discord.Color.green(),
             )
         else:
             embed = discord.Embed(
                 title="New Incident",
-                description=f"​\n**{name}** - {url}\n\n**Cause:** {cause}\n\n**Start:** <t:{start}:f> (<t:{start}:R>)\n​",
+                description=new_incident_description.format(
+                    name=name, url=url, cause=cause, start=start
+                ),
                 color=discord.Color.red(),
             )
         embed.set_author(
