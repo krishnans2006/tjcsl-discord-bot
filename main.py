@@ -22,7 +22,6 @@ base_team_url = "https://uptime.betterstack.com/team/58077"
 async def on_ready():
     await client.change_presence(activity=discord.Game(name="with dns"))
     print("Bot is ready")
-    list_incidents()
 
 
 @tasks.loop(minutes=1)

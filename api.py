@@ -20,7 +20,7 @@ def call_api(endpoint: str, **kwargs) -> dict:
 
 def list_incidents(
     duration: timedelta = timedelta(minutes=1),
-) -> Iterator[tuple[Incident, datetime, bool]] | None:
+) -> Iterator[tuple[Incident, datetime, datetime | None, bool]] | None:
     current_incidents = call_api("incidents")["data"]
     for incident in current_incidents:
         start_time = datetime.strptime(
@@ -29,6 +29,7 @@ def list_incidents(
         if start_time > datetime.now(tz=timezone.utc) - duration:
             yield incident, start_time, None, False
             continue
+
         resolve_time = datetime.strptime(
             incident["attributes"]["resolved_at"], "%Y-%m-%dT%H:%M:%S.%fZ"
         ).replace(tzinfo=timezone.utc)
