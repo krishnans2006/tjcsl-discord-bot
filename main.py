@@ -30,6 +30,8 @@ async def check_incidents():
     new_incidents = list_incidents(duration=timedelta(minutes=1))
     channel = None
     for incident, start_time, resolve_time, is_resolved in new_incidents:
+        print(incident)
+
         name = incident["attributes"]["name"]
         url = incident["attributes"]["url"]
         cause = incident["attributes"]["cause"]

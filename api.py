@@ -26,14 +26,11 @@ def list_incidents(
         start_time = datetime.strptime(
             incident["attributes"]["started_at"], "%Y-%m-%dT%H:%M:%S.%fZ"
         ).replace(tzinfo=timezone.utc)
-        if start_time > datetime.now() - duration:
+        if start_time > datetime.now(tz=timezone.utc) - duration:
             yield incident, start_time, None, False
             continue
         resolve_time = datetime.strptime(
             incident["attributes"]["resolved_at"], "%Y-%m-%dT%H:%M:%S.%fZ"
         ).replace(tzinfo=timezone.utc)
-        if resolve_time > datetime.now() - duration:
+        if resolve_time > datetime.now(tz=timezone.utc) - duration:
             yield incident, start_time, resolve_time, True
-    # yield current_incidents[0], datetime.now() - timedelta(hours=6), datetime.now() - timedelta(
-    #     hours=4
-    # ), True
