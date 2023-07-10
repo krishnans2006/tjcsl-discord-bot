@@ -12,6 +12,7 @@ poetry install
 ## Required Environment Variables
 
 `TOKEN` - Discord Bot Token
+
 `API_TOKEN` - Better Stack API Token
 
 ## Run
