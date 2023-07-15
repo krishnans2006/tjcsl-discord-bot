@@ -28,8 +28,9 @@ def list_incidents(
         ).replace(tzinfo=timezone.utc)
         if start_time > datetime.now(tz=timezone.utc) - duration:
             yield incident, start_time, None, False
-            continue
 
+        if incident["attributes"]["resolved_at"] is None:
+            continue
         resolve_time = datetime.strptime(
             incident["attributes"]["resolved_at"], "%Y-%m-%dT%H:%M:%S.%fZ"
         ).replace(tzinfo=timezone.utc)
