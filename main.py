@@ -74,7 +74,7 @@ async def before_change_status():
     await client.wait_until_ready()
 
 
-@tasks.loop(minutes=1)
+@tasks.loop(seconds=1)
 async def check_incidents():
     new_incidents = list_incidents(duration=timedelta(minutes=1))
     channel = None
