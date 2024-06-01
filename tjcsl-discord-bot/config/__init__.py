@@ -1,8 +1,12 @@
 # This file stores default config settings
 # To override, set any variable in config/secret.py
 
+# Bot settings
+BOT_TOKEN = ""
+
 # API settings
 API_BASE_URL = "https://uptime.betterstack.com/api/v2/"
+API_TOKEN = ""
 
 # Message location
 GUILD_ID = 1037482630838489179

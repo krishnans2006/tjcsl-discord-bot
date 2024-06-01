@@ -3,7 +3,7 @@ from dateutil import parser
 import os
 from typing import Iterator
 
-from config import API_BASE_URL
+import config as C
 
 import requests
 
@@ -13,8 +13,8 @@ IncidentList = Iterator[tuple[Incident, datetime, datetime | None, bool]]
 
 def call_api(endpoint: str, **kwargs) -> dict:
     response = requests.get(
-        API_BASE_URL + endpoint,
-        headers={"Authorization": f"Bearer {os.getenv('API_TOKEN')}"},
+        C.API_BASE_URL + endpoint,
+        headers={"Authorization": f"Bearer {C.API_TOKEN}"},
         timeout=30,
         **kwargs,
     )

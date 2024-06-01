@@ -8,16 +8,7 @@ from dotenv import load_dotenv
 
 from api import list_incidents
 from status import select_status
-from config import (
-    GUILD_ID,
-    CHANNEL_ID,
-    BETTERSTACK_TEAM_URL,
-    BETTERSTACK_LOGO,
-    STATUSPAGE_URL,
-    ROLE_PING_ID,
-    RESOLVED_INCIDENT_DESCRIPTION,
-    NEW_INCIDENT_DESCRIPTION,
-)
+import config as C
 
 load_dotenv()
 
@@ -55,14 +46,14 @@ async def check_incidents():
         start = round(start_time.timestamp())
 
         if not channel:
-            channel = client.get_guild(GUILD_ID).get_channel(CHANNEL_ID)
+            channel = client.get_guild(C.GUILD_ID).get_channel(C.CHANNEL_ID)
 
         if is_resolved:
             end = round(resolve_time.timestamp())
             duration = timedelta(seconds=end - start)
             embed = discord.Embed(
                 title="Resolved Incident",
-                description=RESOLVED_INCIDENT_DESCRIPTION.format(
+                description=C.RESOLVED_INCIDENT_DESCRIPTION.format(
                     name=name, url=url, cause=cause, start=start, end=end, duration=duration
                 ),
                 color=discord.Color.green(),
@@ -70,31 +61,31 @@ async def check_incidents():
         else:
             embed = discord.Embed(
                 title="New Incident",
-                description=NEW_INCIDENT_DESCRIPTION.format(
+                description=C.NEW_INCIDENT_DESCRIPTION.format(
                     name=name, url=url, cause=cause, start=start
                 ),
                 color=discord.Color.red(),
             )
         embed.set_author(
             name="Better Stack",
-            icon_url=BETTERSTACK_LOGO,
+            icon_url=C.BETTERSTACK_LOGO,
         )
 
         view = discord.ui.View()
         view.add_item(
             discord.ui.Button(
                 label="Better Stack Dashboard",
-                url=f"{BETTERSTACK_TEAM_URL}/monitors",
+                url=f"{C.BETTERSTACK_TEAM_URL}/monitors",
             )
         )
         view.add_item(
             discord.ui.Button(
                 label="Status Page",
-                url=STATUSPAGE_URL,
+                url=C.STATUSPAGE_URL,
             )
         )
 
-        await channel.send(content=f"<@&{ROLE_PING_ID}>", embed=embed, view=view)
+        await channel.send(content=f"<@&{C.ROLE_PING_ID}>", embed=embed, view=view)
     print("Checked for new incidents")
 
 
@@ -106,4 +97,4 @@ async def before_check_incidents():
 if __name__ == "__main__":
     check_incidents.start()
     change_status.start()
-    client.run(os.getenv("TOKEN"))
+    client.run(C.BOT_TOKEN)
