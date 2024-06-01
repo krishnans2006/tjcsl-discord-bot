@@ -8,36 +8,21 @@ from dotenv import load_dotenv
 
 from api import list_incidents
 from status import select_status
+from config import (
+    GUILD_ID,
+    CHANNEL_ID,
+    BETTERSTACK_TEAM_URL,
+    BETTERSTACK_LOGO,
+    STATUSPAGE_URL,
+    ROLE_PING_ID,
+    RESOLVED_INCIDENT_DESCRIPTION,
+    NEW_INCIDENT_DESCRIPTION,
+)
 
 load_dotenv()
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
-
-guild_id = 1037482630838489179
-channel_id = 1127402489013076038
-
-base_team_url = "https://uptime.betterstack.com/team/58077"
-
-new_incident_description = """\u200B
-**{name}** - {url}
-
-**Cause:** {cause}
-
-**Start:** <t:{start}:f> (<t:{start}:R>)
-\u200B
-"""
-
-resolved_incident_description = """\u200B
-**{name}** - {url}
-
-**Cause:** {cause}
-
-**Start:** <t:{start}:f> (<t:{start}:R>)
-**End:** <t:{end}:f> (<t:{end}:R>)
-**Duration:** `{duration}`
-\u200B
-"""
 
 
 @client.event
@@ -70,14 +55,14 @@ async def check_incidents():
         start = round(start_time.timestamp())
 
         if not channel:
-            channel = client.get_guild(guild_id).get_channel(channel_id)
+            channel = client.get_guild(GUILD_ID).get_channel(CHANNEL_ID)
 
         if is_resolved:
             end = round(resolve_time.timestamp())
             duration = timedelta(seconds=end - start)
             embed = discord.Embed(
                 title="Resolved Incident",
-                description=resolved_incident_description.format(
+                description=RESOLVED_INCIDENT_DESCRIPTION.format(
                     name=name, url=url, cause=cause, start=start, end=end, duration=duration
                 ),
                 color=discord.Color.green(),
@@ -85,31 +70,31 @@ async def check_incidents():
         else:
             embed = discord.Embed(
                 title="New Incident",
-                description=new_incident_description.format(
+                description=NEW_INCIDENT_DESCRIPTION.format(
                     name=name, url=url, cause=cause, start=start
                 ),
                 color=discord.Color.red(),
             )
         embed.set_author(
             name="Better Stack",
-            icon_url="https://pbs.twimg.com/profile_images/1380564657505718275/TToZVzli_400x400.jpg",
+            icon_url=BETTERSTACK_LOGO,
         )
 
         view = discord.ui.View()
         view.add_item(
             discord.ui.Button(
                 label="Better Stack Dashboard",
-                url=f"{base_team_url}/monitors",
+                url=f"{BETTERSTACK_TEAM_URL}/monitors",
             )
         )
         view.add_item(
             discord.ui.Button(
                 label="Status Page",
-                url="https://status.tjhsst.edu",
+                url=STATUSPAGE_URL,
             )
         )
 
-        await channel.send(content="<@&1127698117370851552>", embed=embed, view=view)
+        await channel.send(content=f"<@&{ROLE_PING_ID}>", embed=embed, view=view)
     print("Checked for new incidents")
 
 

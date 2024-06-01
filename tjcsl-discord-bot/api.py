@@ -3,16 +3,17 @@ from dateutil import parser
 import os
 from typing import Iterator
 
+from config import API_BASE_URL
+
 import requests
 
-BASE_URL = "https://uptime.betterstack.com/api/v2/"
 Incident = dict[str, str | dict[str, str]]
 IncidentList = Iterator[tuple[Incident, datetime, datetime | None, bool]]
 
 
 def call_api(endpoint: str, **kwargs) -> dict:
     response = requests.get(
-        BASE_URL + endpoint,
+        API_BASE_URL + endpoint,
         headers={"Authorization": f"Bearer {os.getenv('API_TOKEN')}"},
         timeout=30,
         **kwargs,
