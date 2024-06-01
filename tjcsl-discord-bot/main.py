@@ -1,6 +1,4 @@
-import os
 from datetime import timedelta
-import random
 
 import discord
 from discord.ext import tasks
@@ -22,10 +20,11 @@ async def on_ready():
     print("Bot is ready")
 
 
-@tasks.loop(minutes=5)
+@tasks.loop(seconds=C.STATUS_CHANGE_INTERVAL_SECONDS)
 async def change_status():
     status = select_status()
     await client.change_presence(activity=discord.Game(name=f"with {status}"))
+    print(f"Changed status")
 
 
 @change_status.before_loop
@@ -33,7 +32,7 @@ async def before_change_status():
     await client.wait_until_ready()
 
 
-@tasks.loop(minutes=1)
+@tasks.loop(seconds=C.TASK_LOOP_INTERVAL_SECONDS)
 async def check_incidents():
     new_incidents = list_incidents(duration=timedelta(minutes=1))
     channel = None

@@ -21,7 +21,9 @@ def call_api(endpoint: str, **kwargs) -> dict:
     return response.json()
 
 
-def list_incidents(duration: timedelta = timedelta(minutes=1)) -> IncidentList | None:
+def list_incidents(
+    duration: timedelta = timedelta(seconds=C.INCIDENT_CHECK_INTERVAL_SECONDS),
+) -> IncidentList | None:
     current_incidents = call_api("incidents")["data"]
     for incident in current_incidents:
         start_time = parser.parse(incident["attributes"]["started_at"])
