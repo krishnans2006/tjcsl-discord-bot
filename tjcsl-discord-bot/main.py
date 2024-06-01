@@ -7,7 +7,7 @@ from discord.ext import tasks
 from dotenv import load_dotenv
 
 from api import list_incidents
-from status import statuses
+from status import select_status
 
 load_dotenv()
 
@@ -48,7 +48,7 @@ async def on_ready():
 
 @tasks.loop(minutes=5)
 async def change_status():
-    status = random.choice(statuses)
+    status = select_status()
     await client.change_presence(activity=discord.Game(name=f"with {status}"))
 
 
