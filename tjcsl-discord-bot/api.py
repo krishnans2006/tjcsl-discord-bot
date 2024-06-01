@@ -10,6 +10,9 @@ import requests
 Incident = dict[str, str | dict[str, str]]
 IncidentList = Iterator[tuple[Incident, datetime, datetime | None, bool]]
 
+pending_incidents = set()
+resolved_incidents = set()
+
 
 def call_api(endpoint: str, **kwargs) -> dict:
     response = requests.get(
@@ -21,17 +24,20 @@ def call_api(endpoint: str, **kwargs) -> dict:
     return response.json()
 
 
-def list_incidents(
-    duration: timedelta = timedelta(seconds=C.PAST_INCIDENT_SECONDS),
-) -> IncidentList | None:
+def list_incidents(duration: timedelta) -> IncidentList | None:
     current_incidents = call_api("incidents")["data"]
     for incident in current_incidents:
+        if incident["id"] in resolved_incidents:
+            continue
+
         start_time = parser.parse(incident["attributes"]["started_at"])
         if start_time > datetime.now(tz=timezone.utc) - duration:
             yield incident, start_time, None, False
 
         if incident["attributes"]["resolved_at"] is None:
+            pending_incidents.add(incident["id"])
             continue
         resolve_time = parser.parse(incident["attributes"]["resolved_at"])
         if resolve_time > datetime.now(tz=timezone.utc) - duration:
+            resolved_incidents.add(incident["id"])
             yield incident, start_time, resolve_time, True
