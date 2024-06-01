@@ -34,7 +34,7 @@ async def before_change_status():
 
 @tasks.loop(seconds=C.TASK_LOOP_INTERVAL_SECONDS)
 async def check_incidents():
-    new_incidents = list_incidents(duration=timedelta(minutes=1))
+    new_incidents = list_incidents(duration=timedelta(seconds=C.PAST_INCIDENT_SECONDS))
     channel = None
     for incident, start_time, resolve_time, is_resolved in new_incidents:
         print(incident)

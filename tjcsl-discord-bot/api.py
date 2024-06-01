@@ -22,7 +22,7 @@ def call_api(endpoint: str, **kwargs) -> dict:
 
 
 def list_incidents(
-    duration: timedelta = timedelta(seconds=C.INCIDENT_CHECK_INTERVAL_SECONDS),
+    duration: timedelta = timedelta(seconds=C.PAST_INCIDENT_SECONDS),
 ) -> IncidentList | None:
     current_incidents = call_api("incidents")["data"]
     for incident in current_incidents:
