@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "tjscl-discord-bot"
+name = "tjcsl-discord-bot"
 version = "0.1.0"
 description = ""
 authors = ["Krishnan Shankar <krishnans2006@gmail.com>"]
 readme = "README.md"
-packages = [{include = "tjscl_discord_bot"}]
+packages = [{include = "tjcsl_discord_bot"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
