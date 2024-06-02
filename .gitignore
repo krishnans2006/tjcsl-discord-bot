@@ -162,3 +162,4 @@ cython_debug/
 
 # Custom
 tjcsl-discord-bot/config/secret.py
+tjcsl-discord-bot/logs

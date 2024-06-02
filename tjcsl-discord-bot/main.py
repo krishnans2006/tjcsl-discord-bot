@@ -1,4 +1,6 @@
 from datetime import timedelta
+import logging
+import os
 
 import discord
 from discord.ext import tasks
@@ -13,18 +15,20 @@ load_dotenv()
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
+logger = logging.getLogger("main")
+
 
 @client.event
 async def on_ready():
     await client.change_presence(activity=discord.Game(name="with ur mom"))
-    print("Bot is ready")
+    logger.info("Bot is ready")
 
 
 @tasks.loop(seconds=C.STATUS_CHANGE_INTERVAL_SECONDS)
 async def change_status():
     status = select_status()
     await client.change_presence(activity=discord.Game(name=f"with {status}"))
-    print(f"Changed status")
+    logger.info(f"Changed status to {status}")
 
 
 @change_status.before_loop
@@ -37,7 +41,7 @@ async def check_incidents():
     new_incidents = list_incidents(duration=timedelta(seconds=C.PAST_INCIDENT_SECONDS))
     channel = None
     for incident, start_time, resolve_time, is_resolved in new_incidents:
-        print(incident)
+        logger.info(str(incident))
 
         name = incident["attributes"]["name"]
         url = incident["attributes"]["url"]
@@ -85,7 +89,7 @@ async def check_incidents():
         )
 
         await channel.send(content=f"<@&{C.ROLE_PING_ID}>", embed=embed, view=view)
-    print("Checked for new incidents")
+    logger.info("Checked for new incidents")
 
 
 @check_incidents.before_loop
@@ -94,6 +98,14 @@ async def before_check_incidents():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="[%(levelname)s] (%(name)s) %(asctime)s  %(message)-500s",
+        handlers=(
+            logging.StreamHandler(),
+            logging.FileHandler(os.path.join(os.path.dirname(__file__), "logs", "info.log")),
+        ),
+    )
     check_incidents.start()
     change_status.start()
     client.run(C.BOT_TOKEN)
