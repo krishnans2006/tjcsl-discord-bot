@@ -1,6 +1,6 @@
 # TJCSL Discord Bot
 
-A Discord bot for the TJCSL Discord Server, emulating Better Stack webhooks using the Better Stack API.
+A Discord bot for the TJ CSL Discord Server, emulating Better Stack webhooks using the Better Stack API.
 
 
 ## Setup
@@ -9,15 +9,15 @@ A Discord bot for the TJCSL Discord Server, emulating Better Stack webhooks usin
 poetry install
 ```
 
-## Required Environment Variables
+## Required Configs
+Set these variables in `tjcsl-discord-bot/config/secret.py`
 
-`TOKEN` - Discord Bot Token
-
-`API_TOKEN` - Better Stack API Token
+- `TOKEN` - Discord Bot Token
+- `API_TOKEN` - Better Stack API Token
 
 ## Run
 
 ```bash
 poetry shell
-python main.py
+python tjcsl-discord-bot/main.py
 ```
