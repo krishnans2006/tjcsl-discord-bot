@@ -14,8 +14,8 @@ python-dotenv = "^1.0.0"
 python-dateutil = "^2.9.0.post0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.3.0"
-pylint = "^2.17.4"
+black = "*"
+pylint = "*"
 
 [build-system]
 requires = ["poetry-core"]
