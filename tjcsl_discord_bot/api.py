@@ -27,16 +27,20 @@ def call_api(endpoint: str, **kwargs) -> dict:
 def list_incidents(duration: timedelta) -> IncidentList | None:
     current_incidents = call_api("incidents")["data"]
     for incident in current_incidents:
+        # Warning: Confusing logic
         if incident["id"] in resolved_incidents:
             continue
 
         start_time = parser.parse(incident["attributes"]["started_at"])
-        if start_time > datetime.now(tz=timezone.utc) - duration:
-            yield incident, start_time, None, False
 
         if incident["attributes"]["resolved_at"] is None:
-            pending_incidents.add(incident["id"])
+            if start_time > datetime.now(tz=timezone.utc) - duration:
+                if incident["id"] in pending_incidents:
+                    continue
+                pending_incidents.add(incident["id"])
+                yield incident, start_time, None, False
             continue
+
         resolve_time = parser.parse(incident["attributes"]["resolved_at"])
         if resolve_time > datetime.now(tz=timezone.utc) - duration:
             resolved_incidents.add(incident["id"])
